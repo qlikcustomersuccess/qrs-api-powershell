@@ -35,7 +35,7 @@ $UserDomain = "Domain"
 $Taskname = "Reload task of My App"
 
 # 16 character Xrefkey to use for QRS API call
-$XrfKey="hfFOdh87fD98f7sf"
+$XrfKey =  "hfFOdh87fD98f7sf"
 
 # HTTP headers to be used in REST API call
 $HttpHeaders = @{}
@@ -45,15 +45,14 @@ $HttpHeaders.Add("Content-Type", "application/json")
 
 $HttpBody = @{}
 
-$ClientCert = Get-ChildItem -Path "Cert:\CurrentUser\My" | Where {$_.Subject -like '*QlikClient*'}
-#$ClientCert
+$ClientCert = Get-ChildItem -Path "Cert:\CurrentUser\My" | Where-Object {$_.Subject -like '*QlikClient*'}
+$ClientCert
 
-$TaskReload = Invoke-RestMethod -Uri "https://$($FQDN):4242/qrs/task/start/synchronous?xrfkey=$($xrfkey)&name=$($Taskname)" `
-                                -Method POST `
-                                -Headers $HttpHeaders  `
-                                -Body $HttpBody `
-                                -ContentType 'application/json' `
-                                -Certificate $ClientCert
+$TaskGUID = Invoke-RestMethod -Uri "https://$($FQDN):4242/qrs/task/start/synchronous?xrfkey=$($xrfkey)&name=$($Taskname)" `
+                              -Method POST `
+                              -Headers $HttpHeaders  `
+                              -Body $HttpBody `
+                              -ContentType 'application/json' `
+                              -Certificate $ClientCert
 
-# Print result
-$TaskReload
+$TaskGUID
