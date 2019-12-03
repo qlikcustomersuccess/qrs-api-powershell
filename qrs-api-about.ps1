@@ -35,6 +35,12 @@ $UserDomain = "Domain"
 # Note, certificate lookup must return only one certificate. 
 $ClientCert = Get-ChildItem -Path "Cert:\CurrentUser\My" | Where-Object {$_.Subject -like '*QlikClient*'}
 
+# Only continue if one unique client cert was found 
+if (($ClientCert | measure-object).count -ne 1) { 
+    Write-Host "Failed. Could not find one unique certificate." -ForegroundColor Red
+    Exit 
+}
+
 # 16 character Xrefkey to use for QRS API call
 $XrfKey = "hfFOdh87fD98f7sf"
 
