@@ -21,13 +21,13 @@
     Folder to store JSON exports in
 
     .EXAMPLE
-    C:\PS> .\Update-Month.ps1
+    C:\PS> .\qrs-api-get-all-rules.ps1
 
     .EXAMPLE
-    C:\PS> .\Update-Month.ps1 -inputpath C:\Data\January.csv
+    C:\PS> .\qrs-api-get-all-rules.ps1 -UserName User1 -UserDomain Domain
 
     .EXAMPLE
-    C:\PS> .\Update-Month.ps1 -inputpath C:\Data\January.csv -outputPath C:\Reports\2009\January.csv
+    C:\PS> .\qrs-api-get-all-rules.ps1 -UserName User1 -UserDomain Domain -FQDN qilk.domain.local
 
     .NOTES
     This script is provided "AS IS", without any warranty, under the MIT License. 
