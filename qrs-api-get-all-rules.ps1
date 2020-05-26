@@ -6,19 +6,19 @@
     This script calls QRS APIs to a Qlik Sense central node to extract all security rules and load balancing rules. The results are stored in JSON files. 
 
     .PARAMETER  FQDN
-    Hostname to Qlik Sense central node, towards which QRS API call is execute to.  
+    Hostname to Qlik Sense central node, towards which QRS API call is execute to. Defaults to the FDQN on host where script is executed. 
 
     .PARAMETER  UserName
-    User to be impersonated during QRS API call. Note, API call result reflects the user's authorized access right.
+    User to be impersonated during QRS API call. Note, API call result reflects the user's authorized access right. Defaults to the user executing the script
 
     .PARAMETER  UserDomain
-    Domain that user belongs to in Qlik Sense user list. 
+    Domain that user belongs to in Qlik Sense user list. Defaults to the domain of the user executing the script
 
     .PARAMETER  CertIssuer
-    Hostname used to sign the Qlik Sense CA certificate
+    Hostname used to sign the Qlik Sense CA certificate. Defaults to the FDQN on host where script is executed.
 
     .PARAMETER  Output
-    Folder to store JSON exports in
+    Folder to store JSON results fron QRD API calls.
 
     .EXAMPLE
     C:\PS> .\qrs-api-get-all-rules.ps1
@@ -30,8 +30,9 @@
     C:\PS> .\qrs-api-get-all-rules.ps1 -UserName User1 -UserDomain Domain -FQDN qilk.domain.local
 
     .NOTES
+    Copyright (c) 2020
     This script is provided "AS IS", without any warranty, under the MIT License. 
-    Copyright (c) 2020 
+    
 #>
 
 # Paramters for REST API call
