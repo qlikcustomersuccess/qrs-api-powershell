@@ -4,11 +4,8 @@
     
     .DESCRIPTION
     Call QRS API end-point /qrs/about to confirm that certificate and connection path is valid for REST API calls to Qlik Sense Repository Service. 
-
     Successful conneciton is indicated by the About info being printed in terminal. 
-
     https://help.qlik.com/en-US/sense-developer/February2019/Subsystems/RepositoryServiceAPI/Content/Sense_RepositoryServiceAPI/RepositoryServiceAPI-About-Get.htm
-
 ​ 
     .PARAMETER  FQDN
     Hostname to Qlik Sense central node, towards which QRS API call is execute to. Defaults to the FDQN on host where script is executed. 
