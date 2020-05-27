@@ -18,7 +18,7 @@
     Hostname used to sign the Qlik Sense CA certificate. Defaults to the FDQN on host where script is executed.
 
     .PARAMETER  Output
-    Folder to store JSON results fron QRD API calls.
+    Folder to store JSON results in. Default to same folder as script file. 
 
     .EXAMPLE
     C:\PS> .\qrs-api-get-all-rules.ps1
