@@ -1,39 +1,55 @@
-# MIT License
-# 
-# Copyright (c) 2019 Qlik Support
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE`
-# SOFTWARE.
+<#
+    .SYNOPSIS
+    Validate successful Qlik Sense Repository Service (QRS) API conneciotn by calling for Qlik Sense about info.
+    
+    .DESCRIPTION
+    Call QRS API end-point /qrs/about to confirm that certificate and connection path is valid for REST API calls to Qlik Sense Repository Service. 
 
-# References 
-# QRS API - About: Get https://help.qlik.com/en-US/sense-developer/February2019/Subsystems/RepositoryServiceAPI/Content/Sense_RepositoryServiceAPI/RepositoryServiceAPI-About-Get.htm
-# XrfKey; https://help.qlik.com/en-US/sense-developer/Subsystems/RepositoryServiceAPI/Content/Sense_RepositoryServiceAPI/RepositoryServiceAPI-Connect-API-Using-Xrfkey-Headers.htm
+    Successful conneciton is indicated by the About info being printed in terminal. 
 
-# FQDN to Qlik Sense central node
-$FQDN = "qlikserver.domain.local"
+    https://help.qlik.com/en-US/sense-developer/February2019/Subsystems/RepositoryServiceAPI/Content/Sense_RepositoryServiceAPI/RepositoryServiceAPI-About-Get.htm
 
-# User credentials to use for authetication
-$UserName   = "Administrator"
-$UserDomain = "Domain"
+​ 
+    .PARAMETER  FQDN
+    Hostname to Qlik Sense central node, towards which QRS API call is execute to. Defaults to the FDQN on host where script is executed. 
+​
+    .PARAMETER  UserName
+    User to be impersonated during QRS API call. Note, API call result reflects the user's authorized access right. Defaults to the user executing the script
+​
+    .PARAMETER  UserDomain
+    Domain that user belongs to in Qlik Sense user list. Defaults to the domain of the user executing the script
+​
+    .PARAMETER  CertIssuer
+    Hostname used to sign the Qlik Sense CA certificate. Defaults to the FDQN on host where script is executed.
+​
+    .EXAMPLE
+    C:\PS> .\qrs-api-about.ps1
+​   
+    .EXAMPLE
+    C:\PS> .\qrs-api-about.ps1 -UserName User1 -UserDomain Domain
+​
+    .EXAMPLE
+    C:\PS> .\qrs-api-get-full-app-detail.ps11 -UserName User1 -UserDomain Domain -FQDN qilk.domain.local
+​
+    .NOTES
+    This script is provided "AS IS", without any warranty, under the MIT License. 
+    Copyright (c) 2020 
+#>
+
+param (
+    [Parameter()]
+    [string] $UserName   = $env:USERNAME, 
+    [Parameter()]
+    [string] $UserDomain = $env:USERDOMAIN,
+    [Parameter()]
+    [string] $FQDN       = [string][System.Net.Dns]::GetHostByName(($env:computerName)).Hostname, 
+    [Parameter()]
+    [string] $CertIssuer = [string][System.Net.Dns]::GetHostByName(($env:computerName)).Hostname
+)
 
 # Qlik Sense client certificate to be used for connection authentication
 # Note, certificate lookup must return only one certificate. 
-$ClientCert = Get-ChildItem -Path "Cert:\CurrentUser\My" | Where-Object {$_.Subject -like '*QlikClient*'}
+$ClientCert = Get-ChildItem -Path "Cert:\CurrentUser\My" | Where-Object {$_.Issuer -like "*$($CertIssuer)*"}
 
 # Only continue if one unique client cert was found 
 if (($ClientCert | measure-object).count -ne 1) { 
